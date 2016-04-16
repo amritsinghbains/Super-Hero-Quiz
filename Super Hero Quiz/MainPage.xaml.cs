@@ -33,9 +33,47 @@ namespace Super_Hero_Quiz
             this.InitializeComponent();
             newQuestion_Click(null, null);
 
+            DispatcherTimerSetup();
+
 
         }
 
+        DispatcherTimer dispatcherTimer;
+        DateTimeOffset startTime;
+        DateTimeOffset lastTime;
+        DateTimeOffset stopTime;
+        int timesTicked = 1;
+        int timesToTick = 200;
+
+        public void DispatcherTimerSetup()
+        {
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(2000);
+            //IsEnabled defaults to false 
+            startTime = DateTimeOffset.Now;
+            lastTime = startTime;
+            dispatcherTimer.Start();
+            //IsEnabled should now be true after calling start 
+        }
+
+        void dispatcherTimer_Tick(object sender, object e)
+        {
+            DateTimeOffset time = DateTimeOffset.Now;
+            TimeSpan span = time - lastTime;
+            lastTime = time;
+            //Time since last tick should be very very close to Interval 
+            timesTicked++;
+            if (timesTicked > timesToTick)
+            {
+                stopTime = time;
+                dispatcherTimer.Stop();
+                //IsEnabled should now be false after calling stop 
+                span = stopTime - startTime;
+                
+            }
+            changeDynamic();
+        }
 
 
         private void option_Click(object sender, RoutedEventArgs e)
@@ -109,6 +147,35 @@ namespace Super_Hero_Quiz
 
             }
         }
+
+        private async void changeDynamic()
+        {
+            string url = "https://quizdevmov.herokuapp.com/get";
+
+            Windows.Web.Http.HttpClient clientOb = new Windows.Web.Http.HttpClient();
+            Uri connectionUrl = new Uri(url);
+            //text.Text  = pairs;
+            Dictionary<string, string> pairs = new Dictionary<string, string>();
+            pairs.Add("table", "superhero");
+            Windows.Web.Http.HttpFormUrlEncodedContent formContent = new Windows.Web.Http.HttpFormUrlEncodedContent(pairs);
+            Windows.Web.Http.HttpResponseMessage response = await clientOb.PostAsync(connectionUrl, formContent);
+            if (response.IsSuccessStatusCode)
+            {
+                //greetingOutput.Text = response.Content.ToString();
+
+                JsonArray root = JsonValue.Parse(response.Content.ToString()).GetArray();
+                for (uint i = 0; i < root.Count; i++)
+                {
+                    string option1 = root.GetObjectAt(i).GetNamedString("option1");
+                    
+                    this.loveoption.Text = "We love " + option1;
+
+                }
+
+            }
+        }
+
+        
 
 
 

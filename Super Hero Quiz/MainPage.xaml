@@ -27,6 +27,7 @@
                 <Button x:Name="option4" Content="option4" Width="180" Click="option_Click"/>
             </StackPanel>
             <TextBlock x:Name="greetingOutput"/>
+            <TextBlock x:Name="loveoption"/>
         </StackPanel>
     </Grid>
 </Page>

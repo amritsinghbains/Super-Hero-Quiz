@@ -1,0 +1,2 @@
+MainPackage=C:\Users\amrit\Documents\Visual Studio 2015\Projects\Super Hero Quiz\Super Hero Quiz\bin\x64\Release\Super Hero Quiz_1.3.4.0_x64.appx
+SymbolPackage=C:\Users\amrit\Documents\Visual Studio 2015\Projects\Super Hero Quiz\Super Hero Quiz\AppPackages\Super Hero Quiz_1.3.4.0_Test\Super Hero Quiz_1.3.4.0_x64.appxsym
